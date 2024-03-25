@@ -1,7 +1,10 @@
+using System.Net;
+using Google.Protobuf.WellKnownTypes;
 using Microsoft.AspNetCore.Mvc;
 using MovieApp.Authentication.Requests;
 using MovieApp.Dtos;
 using MovieApp.Services;
+using MovieApp.Utils;
 
 namespace MovieApp.Controllers;
 
@@ -12,10 +15,18 @@ public class AuthController(AuthService authService) : ControllerBase
     private readonly AuthService _authService = authService;
 
     [HttpPost("registration")]
-    public async Task<IUser> Registration(RegistrationRequest request)
+    public async Task<ApiResponser<IUser>> Registration(RegistrationRequest request)
     {
         IUser user = await _authService.Register(request);
-        return user;
+        return new ApiResponser<IUser>(HttpStatusCode.Created, "registration success", user);
     }
+
+    [HttpPost("login")]
+    public async Task<ApiResponser<Token>> Login(LoginRequest request)
+    {
+        Token token = await _authService.Login(request);
+        return new ApiResponser<Token>(HttpStatusCode.Accepted, "Loggin success", token);
+    }
+
 
 }

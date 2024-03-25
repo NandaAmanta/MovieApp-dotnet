@@ -1,16 +1,22 @@
+using System.IdentityModel.Tokens.Jwt;
+using System.Text;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using MovieApp.Authentication.Requests;
 using MovieApp.Data;
 using MovieApp.Dtos;
+using MovieApp.Enums;
 using MovieApp.Models;
+using MovieApp.Utils;
 
 namespace MovieApp.Services;
 
-public class AuthService(MovieAppDataContext context)
+public class AuthService(MovieAppDataContext context, TokenGenerator tokenGenerator)
 {
 
     private readonly MovieAppDataContext _context = context;
+    private readonly TokenGenerator tokenGenerator = tokenGenerator;
 
     public async Task<IUser> Register(RegistrationRequest request)
     {
@@ -24,13 +30,21 @@ public class AuthService(MovieAppDataContext context)
         return user;
     }
 
-    public async Task<IUser?> Login(LoginRequest request)
+    public async Task<Token> Login(LoginRequest request)
     {
         User? user = await _context.User
-        .Where(user => user.Email == request.Email && user.CheckPassword(request.Password))
+        .Where(user => user.Email == request.Email)
         .FirstOrDefaultAsync();
 
-        // to be continue hehe
-        return user;
+        if (user == null || !user.CheckPassword(request.Password))
+        {
+            throw new BadHttpRequestException("Wrong Credentials");
+        }
+
+        string accessToken = tokenGenerator.generate(TokenType.ACCESS,user);
+        string refreshToken = tokenGenerator.generate(TokenType.REFRESH,user);
+        Token token = new(accessToken: accessToken, refreshToken: refreshToken);
+        return token;
+
     }
 }

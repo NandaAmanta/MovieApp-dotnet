@@ -9,10 +9,10 @@ public class LoginRequest
 {
 
     [JsonPropertyName("email")]
-    [Required, EmailAddress]
+    [Required]
     public required string Email { get; set; }
 
     [JsonPropertyName("password")]
-    [Required, MinLength(8)]
+    [Required]
     public required string Password { get; set; }
 }

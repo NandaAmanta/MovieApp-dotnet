@@ -4,27 +4,29 @@ using MovieApp.Data;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using MovieApp.Services;
+using MovieApp.Utils;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 var jwtIssuer = builder.Configuration.GetSection("Jwt:Issuer").Get<string>();
-var jwtKey = builder.Configuration.GetSection("Jwt:Key").Get<string>();
+var jwtKey = builder.Configuration.GetSection("Jwt:AccessTokenKey").Get<string>();
 
-// builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-//  .AddJwtBearer(options =>
-//  {
-//      options.TokenValidationParameters = new TokenValidationParameters
-//      {
-//          ValidateIssuer = true,
-//          ValidateAudience = true,
-//          ValidateLifetime = true,
-//          ValidateIssuerSigningKey = true,
-//          ValidIssuer = jwtIssuer,
-//          ValidAudience = jwtIssuer,
-//          IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey))
-//      };
-//  });
+builder.Services.AddAuthorization();
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+ .AddJwtBearer(options =>
+ {
+     options.TokenValidationParameters = new TokenValidationParameters
+     {
+         ValidateIssuer = true,
+         ValidateAudience = true,
+         ValidateLifetime = true,
+         ValidateIssuerSigningKey = true,
+         ValidIssuer = jwtIssuer,
+         ValidAudience = jwtIssuer,
+         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey))
+     };
+ });
 
 builder.Services.AddDbContext<MovieAppDataContext>(options =>
 {
@@ -36,7 +38,7 @@ builder.Services.AddControllers();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<AuthService>();
-
+builder.Services.AddScoped<TokenGenerator>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -47,6 +49,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseAuthentication();
+app.UseAuthorization();
 
 var summaries = new[]
 {
