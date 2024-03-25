@@ -41,5 +41,6 @@ namespace MovieApp.Models
         public bool CheckPassword(string rawPassword){
             return BCrypt.Net.BCrypt.Verify(rawPassword,this.Password);
         }
+
     }
 }

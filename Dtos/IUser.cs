@@ -19,5 +19,5 @@ public interface IUser
     public bool IsAdmin { get; set; }
 
     [JsonPropertyName("email")]
-    public string Email { get; set; }
+    public string? Email { get; set; }
 }
