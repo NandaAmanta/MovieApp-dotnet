@@ -14,8 +14,13 @@ public class AuthService(MovieAppDataContext context)
 
     public async Task<IUser> Register(RegistrationRequest request)
     {
-        User user = new(request);
-        await _context.AddAsync<User>(user);
+        User user = new User();
+        user.Email = request.Email;
+        user.Name = request.Name;
+        user.SetHashedPassword(request.Password);
+        user.IsAdmin = false;
+        user = _context.User.Add(user).Entity;
+        await _context.SaveChangesAsync();
         return user;
     }
 

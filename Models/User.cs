@@ -41,13 +41,5 @@ namespace MovieApp.Models
         public bool CheckPassword(string rawPassword){
             return BCrypt.Net.BCrypt.Verify(rawPassword,this.Password);
         }
-
-        public User(RegistrationRequest data)
-        {
-            this.Email = data.Email;
-            this.Name = data.Name;
-            this.SetHashedPassword(data.Password);
-            this.IsAdmin = false;
-        }
     }
 }
