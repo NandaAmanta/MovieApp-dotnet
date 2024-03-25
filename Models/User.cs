@@ -12,20 +12,20 @@ namespace MovieApp.Models
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Column("id")]
-        public int Id { get; set; }
+        public long  Id { get; set; }
 
         [Column("name")]
-        public string Name { get; set; }
+        public string? Name { get; set; }
 
         [Column("email")]
-        public string Email { get; set; }
+        public string? Email { get; set; }
 
         [Column("password")]
-        public string Password { get; set; }
+        public string? Password { get; set; }
 
 
         [Column("avatar")]
-        public string Avatar { get; set; }
+        public string? Avatar { get; set; }
 
 
         [Column("is_admin")]

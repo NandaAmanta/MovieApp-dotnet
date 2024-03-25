@@ -33,5 +33,12 @@ namespace MovieApp.Data
         }
 
         public DbSet<User> User { get; set; }
+        public DbSet<Movie> Movie { get; set; }
+        public DbSet<MovieSchedule> MovieSchedule { get; set; }
+        public DbSet<Tag> Tag { get; set; }
+        public DbSet<MovieTag> MovieTag { get; set; }
+        public DbSet<Order> Order { get; set; }
+        public DbSet<OrderItem> OrderItem { get; set; }
+        public DbSet<Studio> Studio { get; set; }
     }
 }
