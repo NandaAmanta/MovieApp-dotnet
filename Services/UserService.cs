@@ -1,8 +1,5 @@
-
-using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.EntityFrameworkCore;
 using MovieApp.Data;
-using MovieApp.Dtos;
+using MovieApp.Dtos.ModelInterfaces;
 using MovieApp.Models;
 
 namespace MovieApp.Services;

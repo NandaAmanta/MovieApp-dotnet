@@ -38,6 +38,7 @@ builder.Services.AddControllers();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<AuthService>();
+builder.Services.AddScoped<MovieService>();
 builder.Services.AddScoped<TokenGenerator>();
 var app = builder.Build();
 
@@ -51,6 +52,7 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseStaticFiles();
 
 var summaries = new[]
 {

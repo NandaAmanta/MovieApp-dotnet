@@ -1,4 +1,5 @@
 
+using System.Net.Sockets;
 using Microsoft.EntityFrameworkCore;
 using MovieApp.Data;
 using MovieApp.Dtos;
@@ -9,8 +10,6 @@ namespace MovieApp.Services;
 
 public class MovieService(MovieAppDataContext context, IWebHostEnvironment environment)
 {
-
-
     private IWebHostEnvironment _hostingEnvironment = environment;
     private readonly MovieAppDataContext _context = context;
 
@@ -29,8 +28,7 @@ public class MovieService(MovieAppDataContext context, IWebHostEnvironment envir
     public async Task<Movie> Create(MovieCreationRequest data)
     {
         var file = data.PosterFile;
-
-        string uploads = Path.Combine(_hostingEnvironment.WebRootPath, "uploads");
+        string uploads = Path.Combine(_hostingEnvironment.WebRootPath, "posters");
         string? filePath = null;
         if (file.Length > 0)
         {
@@ -49,6 +47,29 @@ public class MovieService(MovieAppDataContext context, IWebHostEnvironment envir
         movie = _context.Movie.Add(movie).Entity;
         await _context.SaveChangesAsync();
 
+        return movie;
+    }
+
+    public async Task<Movie> Detail(long id)
+    {
+        return await _context.Movie.SingleAsync(movie => movie.Id == id);
+    }
+
+    public async Task<Movie> Update(long id, MovieUpdateRequest data){
+     
+        Movie movie = await _context.Movie.SingleAsync(movie => movie.Id == id);
+        movie.Title = data.Title;
+        movie.Overview = data.Overview;
+        movie = _context.Movie.Update(movie).Entity;
+        await _context.SaveChangesAsync();
+        return movie;
+    }
+
+    public async Task<Movie> Delete(long id)
+    {
+        Movie movie = await _context.Movie.SingleAsync(movie => movie.Id == id);
+        _context.Remove(movie);
+        await _context.SaveChangesAsync();
         return movie;
     }
 }
