@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using MovieApp.Authentication.Requests;
 using MovieApp.Dtos;
+using MovieApp.Dtos.ModelInterfaces;
 
 namespace MovieApp.Models
 {

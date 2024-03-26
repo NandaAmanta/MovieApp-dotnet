@@ -1,8 +1,8 @@
 using System.Net;
-using Google.Protobuf.WellKnownTypes;
 using Microsoft.AspNetCore.Mvc;
 using MovieApp.Authentication.Requests;
 using MovieApp.Dtos;
+using MovieApp.Dtos.ModelInterfaces;
 using MovieApp.Services;
 using MovieApp.Utils;
 

@@ -2,7 +2,7 @@
 
 using System.Text.Json.Serialization;
 
-namespace MovieApp.Dtos;
+namespace MovieApp.Dtos.ModelInterfaces;
 
 public interface IUser
 {

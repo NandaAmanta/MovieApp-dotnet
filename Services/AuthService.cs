@@ -1,11 +1,8 @@
-using System.IdentityModel.Tokens.Jwt;
-using System.Text;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
 using MovieApp.Authentication.Requests;
 using MovieApp.Data;
 using MovieApp.Dtos;
+using MovieApp.Dtos.ModelInterfaces;
 using MovieApp.Enums;
 using MovieApp.Models;
 using MovieApp.Utils;
