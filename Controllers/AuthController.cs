@@ -1,8 +1,8 @@
 using System.Net;
 using Microsoft.AspNetCore.Mvc;
-using MovieApp.Authentication.Requests;
 using MovieApp.Dtos;
 using MovieApp.Dtos.ModelInterfaces;
+using MovieApp.Requests.Authentication;
 using MovieApp.Services;
 using MovieApp.Utils;
 

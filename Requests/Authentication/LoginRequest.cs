@@ -3,7 +3,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
-namespace MovieApp.Authentication.Requests;
+namespace MovieApp.Requests.Authentication;
 
 public class LoginRequest
 {

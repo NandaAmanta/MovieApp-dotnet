@@ -1,10 +1,10 @@
 using Microsoft.EntityFrameworkCore;
-using MovieApp.Authentication.Requests;
 using MovieApp.Data;
 using MovieApp.Dtos;
 using MovieApp.Dtos.ModelInterfaces;
 using MovieApp.Enums;
 using MovieApp.Models;
+using MovieApp.Requests.Authentication;
 using MovieApp.Utils;
 
 namespace MovieApp.Services;
