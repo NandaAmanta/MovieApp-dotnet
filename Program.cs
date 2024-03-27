@@ -7,6 +7,8 @@ using MovieApp.Services;
 using MovieApp.Utils;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Logging.ClearProviders();
+builder.Logging.AddConsole();
 
 // Add services to the container.
 var jwtIssuer = builder.Configuration.GetSection("Jwt:Issuer").Get<string>();
