@@ -25,5 +25,7 @@ namespace MovieApp.Models
 
         [Column("play_until")]
         public DateTime PlayUntil { get; set; }
+
+        // public ICollection<MovieSchedule> MovieSchedules {get;set;} = [];
     }
 }

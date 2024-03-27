@@ -32,6 +32,21 @@ public class MovieAppDataContext : DbContext
         return base.SaveChanges();
     }
 
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        // modelBuilder.Entity<Movie>()
+        //     .HasMany(m => m.MovieSchedules)
+        //     .WithOne(ms => ms.Movie)
+        //     .HasForeignKey(ms => ms.MovieId);
+
+        // modelBuilder.Entity<Studio>()
+        //     .HasMany(s => s.MovieSchedules)
+        //     .WithOne(ms => ms.Studio)
+        //     .HasForeignKey(ms => ms.StudioId);
+
+        base.OnModelCreating(modelBuilder);
+    }
+
     public DbSet<User> User { get; set; }
     public DbSet<Movie> Movie { get; set; }
     public DbSet<MovieSchedule> MovieSchedule { get; set; }

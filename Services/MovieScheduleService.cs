@@ -18,6 +18,8 @@ public class MovieScheduleService(MovieAppDataContext context, IWebHostEnvironme
                     .OrderBy(b => b.Id)
                     .Skip((page - 1) * perPage)
                     .Take(perPage)
+                    .Include(data => data.Movie)
+                    .Include(data => data.Studio)
                     .ToListAsync();
         var count = await _context.Movie.CountAsync();
         var totalPages = (int)Math.Ceiling(count / (double)perPage);
@@ -29,9 +31,14 @@ public class MovieScheduleService(MovieAppDataContext context, IWebHostEnvironme
         MovieSchedule movieSchedule = new();
         movieSchedule.StartAt = DateTime.Parse(data.StartAt);
         movieSchedule.EndAt = DateTime.Parse(data.EndAt);
-        movieSchedule.MovieId = data.MovieId;
-        movieSchedule.StudioId = data.StudioId;
         movieSchedule.Price = data.Price;
+
+        Studio? studio = await _context.Studio.FindAsync(data.StudioId);
+        movieSchedule.Studio = studio;
+
+        Movie? movie = await _context.Movie.FindAsync(data.MovieId);
+        movieSchedule.Movie = movie;
+
         movieSchedule = _context.MovieSchedule.Add(movieSchedule).Entity;
         await _context.SaveChangesAsync();
         return movieSchedule;
@@ -39,7 +46,10 @@ public class MovieScheduleService(MovieAppDataContext context, IWebHostEnvironme
 
     public async Task<MovieSchedule> Detail(long id)
     {
-        return await _context.MovieSchedule.SingleAsync(data => data.Id == id);
+        return await _context.MovieSchedule
+                    .Include(data => data.Movie)
+                    .Include(data => data.Studio)
+                    .SingleAsync(data => data.Id == id);
     }
 
     public async Task<MovieSchedule> Update(long id, MovieScheduleUpdateRequest data)

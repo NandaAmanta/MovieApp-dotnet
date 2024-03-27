@@ -19,5 +19,8 @@ namespace MovieApp.Models
 
         [Column("seat_capacity")]
         public int? SeatCapacity { get; set; }
+
+        
+        // public ICollection<MovieSchedule> MovieSchedules {get;set;} = [];
     }
 }
