@@ -43,6 +43,7 @@ public class MovieService(MovieAppDataContext context, IWebHostEnvironment envir
         movie.Title = data.Title;
         movie.Overview = data.Overview;
         movie.Poster = filePath;
+        movie.PlayUntil = DateTime.Parse(data.PlayUntil);
 
         movie = _context.Movie.Add(movie).Entity;
         await _context.SaveChangesAsync();
@@ -55,11 +56,13 @@ public class MovieService(MovieAppDataContext context, IWebHostEnvironment envir
         return await _context.Movie.SingleAsync(movie => movie.Id == id);
     }
 
-    public async Task<Movie> Update(long id, MovieUpdateRequest data){
-     
+    public async Task<Movie> Update(long id, MovieUpdateRequest data)
+    {
+
         Movie movie = await _context.Movie.SingleAsync(movie => movie.Id == id);
         movie.Title = data.Title;
         movie.Overview = data.Overview;
+        movie.PlayUntil = DateTime.Parse(data.PlayUntil);
         movie = _context.Movie.Update(movie).Entity;
         await _context.SaveChangesAsync();
         return movie;

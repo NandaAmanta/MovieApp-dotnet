@@ -19,4 +19,7 @@ public class MovieCreationRequest
     [JsonPropertyName("poster")]
     [Required]
     public required IFormFile PosterFile { get; set; }
+
+    [Required]
+    public required string PlayUntil { get; set; }
 }
