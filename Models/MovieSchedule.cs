@@ -29,7 +29,7 @@ namespace MovieApp.Models
         public DateTime EndAt { get; set; }
 
         [Column("price")]
-        public double price { get; set; }
+        public double Price { get; set; }
 
     }
 }
