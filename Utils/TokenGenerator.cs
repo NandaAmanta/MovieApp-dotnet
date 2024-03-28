@@ -3,7 +3,6 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
-using MovieApp.Dtos;
 using MovieApp.Enums;
 using MovieApp.Models;
 
@@ -11,8 +10,6 @@ namespace MovieApp.Utils;
 
 public class TokenGenerator(IConfiguration config)
 {
-
-
     private IConfiguration _config = config;
     public string generate(TokenType type, User user)
     {

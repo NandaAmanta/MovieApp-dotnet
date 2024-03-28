@@ -1,13 +1,14 @@
 
 
 using System.Net;
-using Google.Protobuf.WellKnownTypes;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MovieApp.Dtos;
 using MovieApp.Models;
 using MovieApp.Requests.Movie;
 using MovieApp.Services;
 using MovieApp.Utils;
+using MovieApp.Attributes;
 
 namespace MovieApp.Controllers;
 
@@ -27,6 +28,7 @@ public class MovieController(MovieService movieService) : ControllerBase
     }
 
     [HttpPost]
+    [AdminAuthorize]
     public async Task<ApiResponser<Movie>> Create([FromForm] MovieCreationRequest request)
     {
         Movie movie = await _movieService.Create(request);
@@ -41,6 +43,8 @@ public class MovieController(MovieService movieService) : ControllerBase
     }
 
     [HttpPut("{id}")]
+
+    [AdminAuthorize]
     public async Task<ApiResponser<Movie>> Update(long id, MovieUpdateRequest request)
     {
         Movie movie = await _movieService.Update(id, request);
@@ -48,6 +52,7 @@ public class MovieController(MovieService movieService) : ControllerBase
     }
 
     [HttpDelete("{id}")]
+    [AdminAuthorize]
     public async Task<ApiResponser<Movie>> Delete(long id)
     {
         Movie movie = await _movieService.Delete(id);
