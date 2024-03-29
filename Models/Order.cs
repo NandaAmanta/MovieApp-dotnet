@@ -23,6 +23,7 @@ namespace MovieApp.Models
         public double TotalItemPrice { get; set; }
 
         [Column("payment_method")]
+        [EnumDataType(typeof(PaymentMethod))]
         public PaymentMethod? PaymentMethod { get; set; }
     }
 }

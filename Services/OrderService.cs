@@ -11,20 +11,22 @@ public class OrderService(MovieAppDataContext context)
 {
     private readonly MovieAppDataContext _context = context;
 
-    public async Task<Pagination<Order>> pagination(int page, int perPage, long? userId = null)
+    public async Task<Pagination<Order>> Pagination(int page, int perPage, long? userId = null)
     {
         var data = await _context.Order
-                    .Where(order => order.UserId == userId)
+                    .Where(order => userId == null ? true : order.UserId == userId)
                     .OrderBy(b => b.Id)
                     .Skip((page - 1) * perPage)
                     .Take(perPage)
                     .ToListAsync();
-        var count = await _context.Movie.CountAsync();
+        var count = await _context.Order
+                    .Where(order => userId == null ? true : order.UserId == userId)
+                    .CountAsync();
         var totalPages = (int)Math.Ceiling(count / (double)perPage);
         return new Pagination<Order>(data, page, totalPages, count);
     }
 
-    public async Task<Order> Create(OrderCreationRequest data)
+    public async Task<Order> Create(OrderCreationRequest data, long userId)
     {
         double totalPrice = 0;
         List<long> movieScheduleIds = data.OrderItems.Select(orderItem => orderItem.MovieScheduleId).ToList();
@@ -33,29 +35,62 @@ public class OrderService(MovieAppDataContext context)
         .ToListAsync();
 
         Order order = new();
+        order.User = await _context.User.Where(u => u.Id == userId).FirstAsync();
+        order.PaymentMethod = data.PaymentMethod;
+        order = _context.Order.Add(order).Entity;
+        await _context.SaveChangesAsync();
+
 
         movieSchedules.ForEach(delegate (MovieSchedule movieSchedule)
         {
             var orderItemReq = data.OrderItems
             .Where(o => o.MovieScheduleId == movieSchedule.Id)
             .FirstOrDefault();
-            double price = orderItemReq.Qyt * movieSchedule.Price;
+            Console.WriteLine("=========>" + orderItemReq.Qty);
+            Console.WriteLine("=========>" + movieSchedule.Price);
+            Console.WriteLine("=========>" + orderItemReq.Qty * movieSchedule.Price);
+            double price = orderItemReq.Qty * movieSchedule.Price;
             OrderItem orderItem = new()
             {
                 MovieScheduleId = movieSchedule.Id,
                 Price = price,
                 Order = order,
-                Qty = orderItemReq.Qyt
+                Qty = orderItemReq.Qty
             };
             _context.OrderItem.Add(orderItem);
             totalPrice += price;
         });
 
         order.TotalItemPrice = totalPrice;
-        order.PaymentMethod = data.PaymentMethod;
-        order = _context.Order.Add(order).Entity;
+        order = _context.Order.Update(order).Entity;
         await _context.SaveChangesAsync();
         return order;
     }
+
+    public async Task<Order> Delete(long id)
+    {
+        Order order = await _context.Order.SingleAsync(o => o.Id == id);
+        List<OrderItem> orderItems = await _context.OrderItem.Where(ot => ot.OrderId == id).ToListAsync();
+        _context.Order.Remove(order);
+        _context.OrderItem.RemoveRange(orderItems);
+        await _context.SaveChangesAsync();
+        return order;
+    }
+
+    public async Task<Order> UpdateTotalPrice(long id)
+    {
+        Order order = await _context.Order.SingleAsync(o => o.Id == id);
+        List<OrderItem> orderItems = await _context.OrderItem.Where(ot => ot.OrderId == id).ToListAsync();
+        double totalPrice = 0;
+        orderItems.ForEach(delegate (OrderItem orderItem)
+        {
+            totalPrice += orderItem.Price;
+        });
+        order.TotalItemPrice = totalPrice;
+        order = _context.Order.Update(order).Entity;
+        await _context.SaveChangesAsync();
+        return order;
+    }
+
 
 }
