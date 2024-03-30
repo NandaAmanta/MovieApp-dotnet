@@ -6,6 +6,9 @@ using System.Text;
 using MovieApp.Services;
 using MovieApp.Utils;
 using MovieApp.Middlewares;
+using MovieApp.Configs;
+using Coravel;
+using MovieApp.Invocables;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Logging.ClearProviders();
@@ -16,6 +19,7 @@ var jwtIssuer = builder.Configuration.GetSection("Jwt:Issuer").Get<string>();
 var jwtKey = builder.Configuration.GetSection("Jwt:AccessTokenKey").Get<string>();
 
 builder.Services.AddAuthorization();
+builder.Services.AddScheduler();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
  .AddJwtBearer(options =>
  {
@@ -37,6 +41,7 @@ builder.Services.AddDbContext<MovieAppDataContext>(options =>
 });
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
+builder.Services.Configure<TmdbConfiguration>(builder.Configuration.GetSection("Tmdb"));
 builder.Services.AddControllers();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<UserService>();
@@ -65,7 +70,11 @@ var summaries = new[]
     "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
 };
 
-
+app.Services.UseScheduler(scheduler =>
+{
+    scheduler.Schedule<FetchMovieInvocable>()
+        .DailyAtHour(0);
+});
 app.MapControllers();
 app.Run();
 
