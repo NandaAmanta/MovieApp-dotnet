@@ -9,6 +9,7 @@ using MovieApp.Requests.Movie;
 using MovieApp.Services;
 using MovieApp.Utils;
 using MovieApp.Attributes;
+using MovieApp.Dtos.ModelInterfaces;
 
 namespace MovieApp.Controllers;
 
@@ -19,9 +20,9 @@ public class MovieController(MovieService movieService) : ControllerBase
     private readonly MovieService _movieService = movieService;
 
     [HttpGet]
-    public async Task<ApiResponser<Pagination<Movie>>> Pagination(int pageIndex = 1, int pageSize = 10)
+    public async Task<ApiResponser<Pagination<IMovie>>> Pagination(int pageIndex = 1, int pageSize = 10)
     {
-        return new ApiResponser<Pagination<Movie>>(
+        return new ApiResponser<Pagination<IMovie>>(
             HttpStatusCode.OK,
             "Success get data",
             await _movieService.Paginate(pageIndex, pageSize, null));
@@ -29,33 +30,33 @@ public class MovieController(MovieService movieService) : ControllerBase
 
     [HttpPost]
     [AdminAuthorize]
-    public async Task<ApiResponser<Movie>> Create([FromForm] MovieCreationRequest request)
+    public async Task<ApiResponser<IMovie>> Create([FromForm] MovieCreationRequest request)
     {
-        Movie movie = await _movieService.Create(request);
-        return new ApiResponser<Movie>(HttpStatusCode.Created, "Success created new data", movie);
+        IMovie movie = await _movieService.Create(request);
+        return new ApiResponser<IMovie>(HttpStatusCode.Created, "Success created new data", movie);
     }
 
     [HttpGet("{id}")]
-    public async Task<ApiResponser<Movie>> Detail(long id)
+    public async Task<ApiResponser<IMovie>> Detail(long id)
     {
-        Movie movie = await _movieService.Detail(id);
-        return new ApiResponser<Movie>(HttpStatusCode.OK, "Success get detail data", movie);
+        IMovie movie = await _movieService.Detail(id);
+        return new ApiResponser<IMovie>(HttpStatusCode.OK, "Success get detail data", movie);
     }
 
     [HttpPut("{id}")]
 
     [AdminAuthorize]
-    public async Task<ApiResponser<Movie>> Update(long id, MovieUpdateRequest request)
+    public async Task<ApiResponser<IMovie>> Update(long id, MovieUpdateRequest request)
     {
-        Movie movie = await _movieService.Update(id, request);
-        return new ApiResponser<Movie>(HttpStatusCode.OK, "Success Update data", movie);
+        IMovie movie = await _movieService.Update(id, request);
+        return new ApiResponser<IMovie>(HttpStatusCode.OK, "Success Update data", movie);
     }
 
     [HttpDelete("{id}")]
     [AdminAuthorize]
-    public async Task<ApiResponser<Movie>> Delete(long id)
+    public async Task<ApiResponser<IMovie>> Delete(long id)
     {
-        Movie movie = await _movieService.Delete(id);
-        return new ApiResponser<Movie>(HttpStatusCode.OK, "Success Deleted Data", movie);
+        IMovie movie = await _movieService.Delete(id);
+        return new ApiResponser<IMovie>(HttpStatusCode.OK, "Success Deleted Data", movie);
     }
 }

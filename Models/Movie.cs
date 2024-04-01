@@ -2,11 +2,12 @@
 
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using MovieApp.Dtos.ModelInterfaces;
 
 namespace MovieApp.Models
 {
     [Table("movies")]
-    public class Movie : BaseEntity
+    public class Movie : BaseEntity, IMovie
     {
 
         [Key]
@@ -25,7 +26,6 @@ namespace MovieApp.Models
 
         [Column("play_until")]
         public DateTime PlayUntil { get; set; }
-
-        // public ICollection<MovieSchedule> MovieSchedules {get;set;} = [];
+        public ICollection<MovieSchedule> MovieSchedules { get; set; } = [];
     }
 }

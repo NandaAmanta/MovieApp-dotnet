@@ -50,6 +50,7 @@ builder.Services.AddScoped<MovieService>();
 builder.Services.AddScoped<StudioService>();
 builder.Services.AddScoped<OrderService>();
 builder.Services.AddScoped<MovieScheduleService>();
+builder.Services.AddScoped<TagService>();
 builder.Services.AddScoped<TokenGenerator>();
 var app = builder.Build();
 

@@ -6,6 +6,7 @@ using Microsoft.Extensions.Options;
 using MovieApp.Configs;
 using MovieApp.Data;
 using MovieApp.Dtos;
+using MovieApp.Dtos.ModelInterfaces;
 using MovieApp.Dtos.Tmdb;
 using MovieApp.Models;
 using MovieApp.Requests.Movie;
@@ -18,16 +19,16 @@ public class MovieService(MovieAppDataContext context, IWebHostEnvironment envir
     private TmdbConfiguration _tmdbConfiguration = tmdbConfiguration.Value;
     private readonly MovieAppDataContext _context = context;
 
-    public async Task<Pagination<Movie>> Paginate(int page, int perPage, object? filters)
+    public async Task<Pagination<IMovie>> Paginate(int page, int perPage, object? filters)
     {
         var data = await _context.Movie
                     .OrderBy(b => b.Id)
                     .Skip((page - 1) * perPage)
                     .Take(perPage)
-                    .ToListAsync();
+                    .ToListAsync<IMovie>();
         var count = await _context.Movie.CountAsync();
         var totalPages = (int)Math.Ceiling(count / (double)perPage);
-        return new Pagination<Movie>(data, page, totalPages, count);
+        return new Pagination<IMovie>(data, page, totalPages, count);
     }
 
     public async Task<Movie> Create(MovieCreationRequest data)
@@ -56,12 +57,12 @@ public class MovieService(MovieAppDataContext context, IWebHostEnvironment envir
         return movie;
     }
 
-    public async Task<Movie> Detail(long id)
+    public async Task<IMovie> Detail(long id)
     {
-        return await _context.Movie.SingleAsync(movie => movie.Id == id);
+        return await _context.Movie.SingleAsync<IMovie>(movie => movie.Id == id);
     }
 
-    public async Task<Movie> Update(long id, MovieUpdateRequest data)
+    public async Task<IMovie> Update(long id, MovieUpdateRequest data)
     {
 
         Movie movie = await _context.Movie.SingleAsync(movie => movie.Id == id);
@@ -73,7 +74,7 @@ public class MovieService(MovieAppDataContext context, IWebHostEnvironment envir
         return movie;
     }
 
-    public async Task<Movie> Delete(long id)
+    public async Task<IMovie> Delete(long id)
     {
         Movie movie = await _context.Movie.SingleAsync(movie => movie.Id == id);
         _context.Remove(movie);
