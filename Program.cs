@@ -9,6 +9,7 @@ using MovieApp.Middlewares;
 using MovieApp.Configs;
 using Coravel;
 using MovieApp.Invocables;
+using MovieApp.Queues;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Logging.ClearProviders();
@@ -51,7 +52,9 @@ builder.Services.AddScoped<StudioService>();
 builder.Services.AddScoped<OrderService>();
 builder.Services.AddScoped<MovieScheduleService>();
 builder.Services.AddScoped<TagService>();
+builder.Services.AddSingleton<NotificationQueue>();
 builder.Services.AddScoped<TokenGenerator>();
+builder.Services.AddHostedService<NotificationSenderBgService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

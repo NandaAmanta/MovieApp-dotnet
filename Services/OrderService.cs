@@ -2,14 +2,17 @@
 using Microsoft.EntityFrameworkCore;
 using MovieApp.Data;
 using MovieApp.Dtos;
+using MovieApp.Enums;
 using MovieApp.Models;
+using MovieApp.Queues;
 using MovieApp.Requests.Order;
 
 namespace MovieApp.Services;
 
-public class OrderService(MovieAppDataContext context)
+public class OrderService(MovieAppDataContext context, NotificationQueue notificationQueue)
 {
     private readonly MovieAppDataContext _context = context;
+    private readonly NotificationQueue _notificationQueue = notificationQueue;
 
     public async Task<Pagination<Order>> Pagination(int page, int perPage, long? userId = null)
     {
@@ -64,6 +67,13 @@ public class OrderService(MovieAppDataContext context)
         order.TotalItemPrice = totalPrice;
         order = _context.Order.Update(order).Entity;
         await _context.SaveChangesAsync();
+        await this._notificationQueue.EnqueueNotifAsync(new Notification(){
+            Title = "New Order Created",
+            Message = "Your Order just created",
+            User = await _context.User.SingleAsync(u=>u.Id == userId),
+            Type = NotificationType.PERSONAL
+        });
+        
         return order;
     }
 
