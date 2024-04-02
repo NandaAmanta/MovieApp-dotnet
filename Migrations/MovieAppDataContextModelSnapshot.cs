@@ -74,6 +74,10 @@ namespace MovieApp.Migrations
                         .HasColumnType("bigint")
                         .HasColumnName("movie_id");
 
+                    b.Property<double>("Price")
+                        .HasColumnType("double")
+                        .HasColumnName("price");
+
                     b.Property<DateTime>("StartAt")
                         .HasColumnType("datetime(6)")
                         .HasColumnName("start_at");
@@ -85,10 +89,6 @@ namespace MovieApp.Migrations
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime(6)")
                         .HasColumnName("updated_at");
-
-                    b.Property<double>("price")
-                        .HasColumnType("double")
-                        .HasColumnName("price");
 
                     b.HasKey("Id");
 
@@ -131,6 +131,49 @@ namespace MovieApp.Migrations
                     b.ToTable("movie_tags");
                 });
 
+            modelBuilder.Entity("MovieApp.Models.Notification", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasColumnName("id");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)")
+                        .HasColumnName("created_at");
+
+                    b.Property<bool>("IsRead")
+                        .HasColumnType("tinyint(1)")
+                        .HasColumnName("is_read");
+
+                    b.Property<string>("Message")
+                        .HasColumnType("longtext")
+                        .HasColumnName("message");
+
+                    b.Property<string>("Title")
+                        .HasColumnType("longtext")
+                        .HasColumnName("title");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("longtext")
+                        .HasColumnName("type");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime(6)")
+                        .HasColumnName("updated_at");
+
+                    b.Property<long>("UserId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("user_id");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("notifications");
+                });
+
             modelBuilder.Entity("MovieApp.Models.Order", b =>
                 {
                     b.Property<long>("Id")
@@ -142,8 +185,8 @@ namespace MovieApp.Migrations
                         .HasColumnType("datetime(6)")
                         .HasColumnName("created_at");
 
-                    b.Property<int?>("PaymentMethod")
-                        .HasColumnType("int")
+                    b.Property<string>("PaymentMethod")
+                        .HasColumnType("longtext")
                         .HasColumnName("payment_method");
 
                     b.Property<double>("TotalItemPrice")
@@ -304,7 +347,7 @@ namespace MovieApp.Migrations
             modelBuilder.Entity("MovieApp.Models.MovieSchedule", b =>
                 {
                     b.HasOne("MovieApp.Models.Movie", "Movie")
-                        .WithMany()
+                        .WithMany("MovieSchedules")
                         .HasForeignKey("MovieId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -339,6 +382,17 @@ namespace MovieApp.Migrations
                     b.Navigation("Tag");
                 });
 
+            modelBuilder.Entity("MovieApp.Models.Notification", b =>
+                {
+                    b.HasOne("MovieApp.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("MovieApp.Models.Order", b =>
                 {
                     b.HasOne("MovieApp.Models.User", "User")
@@ -367,6 +421,11 @@ namespace MovieApp.Migrations
                     b.Navigation("MovieSchedule");
 
                     b.Navigation("Order");
+                });
+
+            modelBuilder.Entity("MovieApp.Models.Movie", b =>
+                {
+                    b.Navigation("MovieSchedules");
                 });
 #pragma warning restore 612, 618
         }

@@ -34,15 +34,13 @@ public class MovieAppDataContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        // modelBuilder.Entity<Movie>()
-        //     .HasMany(m => m.MovieSchedules)
-        //     .WithOne(ms => ms.Movie)
-        //     .HasForeignKey(ms => ms.MovieId);
+        modelBuilder.Entity<Notification>()
+                .Property(n => n.Type)
+                .HasConversion<string>();
 
-        // modelBuilder.Entity<Studio>()
-        //     .HasMany(s => s.MovieSchedules)
-        //     .WithOne(ms => ms.Studio)
-        //     .HasForeignKey(ms => ms.StudioId);
+        modelBuilder.Entity<Order>()
+                .Property(o => o.PaymentMethod)
+                .HasConversion<string>();
 
         base.OnModelCreating(modelBuilder);
     }
@@ -55,4 +53,5 @@ public class MovieAppDataContext : DbContext
     public DbSet<Order> Order { get; set; }
     public DbSet<OrderItem> OrderItem { get; set; }
     public DbSet<Studio> Studio { get; set; }
+    public DbSet<Notification> Notification { get; set; }
 }

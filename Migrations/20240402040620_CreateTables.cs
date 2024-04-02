@@ -7,7 +7,7 @@ using MySql.EntityFrameworkCore.Metadata;
 namespace MovieApp.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialMoviepAppDb : Migration
+    public partial class CreateTables : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -149,6 +149,32 @@ namespace MovieApp.Migrations
                 .Annotation("MySQL:Charset", "utf8mb4");
 
             migrationBuilder.CreateTable(
+                name: "notifications",
+                columns: table => new
+                {
+                    id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
+                    title = table.Column<string>(type: "longtext", nullable: true),
+                    message = table.Column<string>(type: "longtext", nullable: true),
+                    type = table.Column<string>(type: "longtext", nullable: false),
+                    is_read = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    user_id = table.Column<long>(type: "bigint", nullable: false),
+                    created_at = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    updated_at = table.Column<DateTime>(type: "datetime(6)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_notifications", x => x.id);
+                    table.ForeignKey(
+                        name: "FK_notifications_users_user_id",
+                        column: x => x.user_id,
+                        principalTable: "users",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                })
+                .Annotation("MySQL:Charset", "utf8mb4");
+
+            migrationBuilder.CreateTable(
                 name: "orders",
                 columns: table => new
                 {
@@ -156,7 +182,7 @@ namespace MovieApp.Migrations
                         .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
                     user_id = table.Column<long>(type: "bigint", nullable: false),
                     total_item_price = table.Column<double>(type: "double", nullable: false),
-                    payment_method = table.Column<int>(type: "int", nullable: true),
+                    payment_method = table.Column<string>(type: "longtext", nullable: true),
                     created_at = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     updated_at = table.Column<DateTime>(type: "datetime(6)", nullable: false)
                 },
@@ -225,6 +251,11 @@ namespace MovieApp.Migrations
                 column: "tag_id");
 
             migrationBuilder.CreateIndex(
+                name: "IX_notifications_user_id",
+                table: "notifications",
+                column: "user_id");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_order_items_movie_schedule_id",
                 table: "order_items",
                 column: "movie_schedule_id");
@@ -245,6 +276,9 @@ namespace MovieApp.Migrations
         {
             migrationBuilder.DropTable(
                 name: "movie_tags");
+
+            migrationBuilder.DropTable(
+                name: "notifications");
 
             migrationBuilder.DropTable(
                 name: "order_items");

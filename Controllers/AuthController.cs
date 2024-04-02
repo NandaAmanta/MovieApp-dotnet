@@ -30,6 +30,4 @@ public class AuthController(AuthService authService, ILogger<User> logger) : Con
         Token token = await _authService.Login(request);
         return new ApiResponser<Token>(HttpStatusCode.Accepted, "Loggin success", token);
     }
-
-
 }
