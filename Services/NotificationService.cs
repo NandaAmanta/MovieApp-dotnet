@@ -26,4 +26,10 @@ public class NotificationService(MovieAppDataContext context)
         var totalPages = (int)Math.Ceiling(count / (double)perPage);
         return new Pagination<Notification>(data, page, totalPages, count);
     }
+
+    public async Task<Notification> Detail(long id, long userId)
+    {
+        return await _context.Notification.SingleAsync<Notification>(n => n.Id == id && n.UserId == userId);
+    }
+
 }

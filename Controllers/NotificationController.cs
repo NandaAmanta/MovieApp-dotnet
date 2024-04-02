@@ -28,14 +28,15 @@ public class NotificationController(NotificationService notificationService) : C
     }
 
 
-    [HttpGet]
+    [HttpGet("{id}")]
     [Authorize]
-    public async Task<ApiResponser<Pagination<Notification>>> Detail(int page = 1, int perPage = 10)
+    public async Task<ApiResponser<Notification>> Detail(long id)
     {
-        return new ApiResponser<Pagination<Notification>>(
+        long userId = (long)Convert.ToDouble(HttpContext.User.FindFirst("sub")?.Value);
+        return new ApiResponser<Notification>(
             HttpStatusCode.Created,
             "registration success",
-            await _notificationService.Paginate(page, perPage));
+            await _notificationService.Detail(id, userId));
     }
 
 
