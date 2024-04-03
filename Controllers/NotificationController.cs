@@ -1,4 +1,5 @@
 using System.Net;
+using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MovieApp.Dtos;
@@ -20,10 +21,10 @@ public class NotificationController(NotificationService notificationService) : C
     [Authorize]
     public async Task<ApiResponser<Pagination<Notification>>> Pagination(int page = 1, int perPage = 10)
     {
-        long userId = (long)Convert.ToDouble(HttpContext.User.FindFirst("sub")?.Value);
+        long userId = (long)Convert.ToDouble(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
         return new ApiResponser<Pagination<Notification>>(
             HttpStatusCode.Created,
-            "registration success",
+            "success",
             await _notificationService.Paginate(userId, page, perPage));
     }
 
@@ -35,7 +36,7 @@ public class NotificationController(NotificationService notificationService) : C
         long userId = (long)Convert.ToDouble(HttpContext.User.FindFirst("sub")?.Value);
         return new ApiResponser<Notification>(
             HttpStatusCode.Created,
-            "registration success",
+            "success",
             await _notificationService.Detail(id, userId));
     }
 

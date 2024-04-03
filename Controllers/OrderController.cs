@@ -22,7 +22,7 @@ public class OrderController(OrderService orderService) : ControllerBase
     [HttpGet]
     public async Task<ApiResponser<Pagination<Order>>> Pagination(int page = 1, int perPage = 10)
     {
-        long userId = (long)Convert.ToDouble(HttpContext.User.FindFirst("sub")?.Value);
+        long userId = (long)Convert.ToDouble(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
         return new ApiResponser<Pagination<Order>>(HttpStatusCode.OK, "Success", await _orderService.Pagination(page, perPage, userId));
     }
 

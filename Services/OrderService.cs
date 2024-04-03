@@ -67,12 +67,13 @@ public class OrderService(MovieAppDataContext context, NotificationQueue notific
         order.TotalItemPrice = totalPrice;
         order = _context.Order.Update(order).Entity;
         await _context.SaveChangesAsync();
-        await this._notificationQueue.EnqueueNotifAsync(new Notification(){
+        var notif = new Notification(){
             Title = "New Order Created",
             Message = "Your Order just created",
-            User = await _context.User.SingleAsync(u=>u.Id == userId),
-            Type = NotificationType.PERSONAL
-        });
+            // User = await _context.User.SingleAsync(u=>u.Id == userId),
+            UserId = userId,
+            Type = NotificationType.PERSONAL};
+        await this._notificationQueue.EnqueueNotifAsync(notif);
         
         return order;
     }

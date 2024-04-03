@@ -52,6 +52,7 @@ builder.Services.AddScoped<StudioService>();
 builder.Services.AddScoped<OrderService>();
 builder.Services.AddScoped<MovieScheduleService>();
 builder.Services.AddScoped<TagService>();
+builder.Services.AddScoped<NotificationService>();
 builder.Services.AddSingleton<NotificationQueue>();
 builder.Services.AddScoped<TokenGenerator>();
 builder.Services.AddHostedService<NotificationSenderBgService>();

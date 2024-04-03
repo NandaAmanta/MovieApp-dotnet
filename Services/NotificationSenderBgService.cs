@@ -11,11 +11,13 @@ public class NotificationSenderBgService(IServiceProvider serviceProvider, Notif
 {
     private readonly IServiceProvider _serviceProvider = serviceProvider;
     private readonly NotificationQueue _queue = queue;
-    // private readonly ILogger _logger = logger;
+
+    // private readonly MovieAppDataContext _ctx = _serviceProvider.CreateScope().ServiceProvider.GetRequiredService<MovieAppDataContext>()
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         while (!stoppingToken.IsCancellationRequested)
         {
+            await Task.Delay(1000);
             using var scope = _serviceProvider.CreateScope();
             var ctx = scope.ServiceProvider.GetRequiredService<MovieAppDataContext>();
             Notification? notification = await this._queue.DequeueNotifAsync();
@@ -23,9 +25,7 @@ public class NotificationSenderBgService(IServiceProvider serviceProvider, Notif
             {
                 ctx.Notification.Add(notification);
                 await ctx.SaveChangesAsync();
-                // this._logger.LogInformation("new notification created");
             }
-            await Task.Delay(1000);
         }
     }
 
