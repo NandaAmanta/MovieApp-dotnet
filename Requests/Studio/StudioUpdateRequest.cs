@@ -7,7 +7,7 @@ namespace MovieApp.Requests.Studio;
 public class StudioUpdateRequest
 {
 
-    [Required]
+    [Required,MaxLength(100)]
     public required string StudioNumber { get; set; }
 
     [Required]

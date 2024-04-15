@@ -9,11 +9,11 @@ public class MovieCreationRequest
 {
 
     [JsonPropertyName("title")]
-    [Required]
+    [Required,MaxLength(100)]
     public required string Title { get; set; }
 
     [JsonPropertyName("overview")]
-    [Required]
+    [Required,MaxLength(250)]
     public required string Overview { get; set; }
 
     [JsonPropertyName("poster")]

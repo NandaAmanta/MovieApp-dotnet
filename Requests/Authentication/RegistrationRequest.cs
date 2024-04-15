@@ -9,14 +9,14 @@ public class RegistrationRequest
 {
 
     [JsonPropertyName("email")]
-    [Required, EmailAddress]
+    [Required, EmailAddress, MaxLength(100)]
     public required string Email { get; set; }
 
     [JsonPropertyName("password")]
-    [Required, MinLength(8)]
+    [Required, MinLength(8),MaxLength(100)]
     public required string Password { get; set; }
 
     [JsonPropertyName("name")]
-    [Required, MinLength(1)]
+    [Required, MinLength(1),MaxLength(100)]
     public required string Name { get; set; }
 }
